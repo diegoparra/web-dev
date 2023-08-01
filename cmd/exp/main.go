@@ -43,4 +43,19 @@ func main() {
 	}
 
 	fmt.Println("Tables created.")
+
+	userID := 1
+
+	for i := 1; i <= 5; i++ {
+		amount := i * 10
+		description := fmt.Sprintf("fake order #%d", i)
+		_, err := db.Exec(`
+      INSERT INTO orders (user_id, amount, description)
+      VALUES ($1, $2, $3)`, userID, amount, description)
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	fmt.Println("Created fake orders")
 }
