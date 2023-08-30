@@ -28,12 +28,22 @@ func (us *UserService) Create(email, password string) (*User, error) {
 
 	passwordHash := string(hashBytes)
 
-	row, err := us.DB.Query(`
-    INSERT INTO users (email, password)
-    VALUES ($1, $2) RETURNING id`, email, password)
+	user := User{
+		Email:        email,
+		PasswordHash: password,
+	}
+
+	row := us.DB.QueryRow(`
+    INSERT INTO users (email, password_hash)
+    VALUES ($1, $2) RETURNING id`, email, passwordHash)
 	if err != nil {
 		return nil, err
 	}
 
-	return nil, nil
+	err = row.Scan(&user.ID)
+	if err != nil {
+		return nil, fmt.Errorf("Scaning user %w", err)
+	}
+
+	return &user, nil
 }

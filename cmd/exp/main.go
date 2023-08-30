@@ -1,18 +1,18 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+
+	"github.com/diegoparra/calhoun/models"
 )
 
 func main() {
-	db, err := sql.Open(
-		"pgx",
-		"host=localhost port=5432 user=root password=root dbname=lenslocked sslmode=disable",
-	)
+	cfg := models.DefaultPostgresConfig()
+	db, err := models.Open(cfg)
 	if err != nil {
+		fmt.Println("error from db.Open")
 		panic(err)
 	}
 
@@ -23,39 +23,15 @@ func main() {
 		panic(err)
 	}
 
-	_, err = db.Exec(`
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      name TEXT,
-      email TEXT UNIQUE NOT NULL
-    );
+	us := models.UserService{
+		DB: db,
+	}
 
-    CREATE TABLE IF NOT EXISTS orders (
-      id SERIAL PRIMARY KEY,
-      user_id INT NOT NULL,
-      amount INT,
-      description TEXT
-    );
-    `)
-
+	user, err := us.Create("diego2@parra.com", "123")
 	if err != nil {
+		fmt.Println("Error from create")
 		panic(err)
 	}
 
-	fmt.Println("Tables created.")
-
-	userID := 1
-
-	for i := 1; i <= 5; i++ {
-		amount := i * 10
-		description := fmt.Sprintf("fake order #%d", i)
-		_, err := db.Exec(`
-      INSERT INTO orders (user_id, amount, description)
-      VALUES ($1, $2, $3)`, userID, amount, description)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	fmt.Println("Created fake orders")
+	fmt.Println(user)
 }
