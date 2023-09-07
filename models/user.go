@@ -30,7 +30,7 @@ func (us *UserService) Create(email, password string) (*User, error) {
 
 	user := User{
 		Email:        email,
-		PasswordHash: password,
+		PasswordHash: passwordHash,
 	}
 
 	row := us.DB.QueryRow(`
