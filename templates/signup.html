@@ -6,6 +6,7 @@
       Start Sharing your photos Today!
     </h1>
     <form action="/users" method="post">
+      <div class="hidden">{{csrfField}}</div>
       <div class="py-2">
         <label class="text-sm font-semibold text-gray-800" for="email"
           >Email address</label
@@ -18,7 +19,12 @@
           required
           autocomplete="email"
           value="{{ .Email }}"
-          {{if not .Email }} autofocus {{end}}
+          {{if
+          not
+          .Email
+          }}
+          autofocus
+          {{end}}
           class="w-full px-3 py-4 border border-color-gray-300 placeholder-gray-500 text-gray-800 rounded"
         />
       </div>
@@ -32,7 +38,10 @@
           type="password"
           placeholder="Password"
           required
-          {{if .Email}} autofocus {{end}}
+          {{if
+          .Email}}
+          autofocus
+          {{end}}
           class="w-full px-3 py-4 border border-color-gray-300 placeholder-gray-500 text-gray-800 rounded"
         />
       </div>

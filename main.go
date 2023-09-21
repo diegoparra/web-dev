@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/gorilla/csrf"
 
 	"github.com/diegoparra/calhoun/controllers"
 	"github.com/diegoparra/calhoun/models"
@@ -55,5 +56,9 @@ func main() {
 		http.Error(w, "Page not found", http.StatusNotFound)
 	})
 	fmt.Println("Starting server on Port: 3000")
-	http.ListenAndServe(":3000", r)
+
+	csrfKey := "gg2eCDG7Uioy9OJKfiuuWLfwOUNE2ZQq"
+	csrfMiddle := csrf.Protect([]byte(csrfKey), csrf.Secure(false))
+
+	http.ListenAndServe(":3000", csrfMiddle(r))
 }
