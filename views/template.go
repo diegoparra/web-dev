@@ -23,8 +23,8 @@ func ParseFS(fs fs.FS, patterns ...string) (Template, error) {
 	tmpl := template.New(patterns[0])
 	tmpl = tmpl.Funcs(
 		template.FuncMap{
-			"csrfField": func() template.HTML {
-				return `<input type="hidden" />`
+			"csrfField": func() (template.HTML, error) {
+				return "", fmt.Errorf("csrfField not implemented yet")
 			},
 		},
 	)
@@ -50,7 +50,7 @@ func Parse(filepath string) (Template, error) {
 	}, err
 }
 
-func (t Template) Execute(w http.ResponseWriter, data interface{}) {
+func (t Template) Execute(w http.ResponseWriter, r *http.Request, data interface{}) {
 	w.Header().Set("Content-Type", "text/html")
 	err := t.htmlTmlp.Execute(w, data)
 	if err != nil {
