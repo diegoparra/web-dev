@@ -26,6 +26,7 @@ func main() {
 		views.Must(views.ParseFS(templates.FS, "faq.html", "tailwind.html"))))
 
 	cfg := models.DefaultPostgresConfig()
+	fmt.Println(cfg.String())
 	db, err := models.Open(cfg)
 	if err != nil {
 		fmt.Println("error from db.Open")
