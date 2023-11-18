@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/csrf"
 
 	"github.com/diegoparra/calhoun/controllers"
+	"github.com/diegoparra/calhoun/migrations"
 	"github.com/diegoparra/calhoun/models"
 	"github.com/diegoparra/calhoun/templates"
 	"github.com/diegoparra/calhoun/views"
@@ -34,6 +35,11 @@ func main() {
 	}
 
 	defer db.Close()
+
+	err = models.MigrateFs(db, migrations.FS, ".")
+	if err != nil {
+		panic(err)
+	}
 
 	userService := models.UserService{
 		DB: db,
